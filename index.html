@@ -388,6 +388,8 @@
   .phone-card .altc a:hover{color:var(--green)}
   .phone-card .altc .copyline{background:none;border:0;padding:0;text-align:left;font:inherit;font-size:12.8px;color:#7f93a8;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
   .phone-card .altc .copyline:hover{color:var(--green)}
+  .phone-card .altc .altbtn{display:inline-flex;align-items:center;gap:9px;font:inherit;font-size:14px;color:#b9c9d9;background:none;border:0;padding:0;cursor:pointer;text-align:left;transition:color .2s ease}
+  .phone-card .altc .altbtn:hover{color:var(--green)}
   .phone-card .altc svg{width:15px;height:15px;flex:none;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 
   /* ---------- footer ---------- */
@@ -456,6 +458,22 @@
   .job h4{font-size:15px}
   .job p{color:var(--muted);font-size:13.6px;margin-top:7px}
   .hire-actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:30px}
+
+  /* ---------- whatsapp float ---------- */
+  .wa-fab{
+    position:fixed;left:16px;bottom:16px;z-index:70;display:inline-flex;align-items:center;gap:9px;
+    padding:11px 17px 11px 14px;border-radius:99px;background:#25d366;color:#fff;
+    font:inherit;font-size:13.4px;font-weight:600;text-decoration:none;
+    border:1px solid rgba(61,255,154,.26);
+    box-shadow:0 10px 28px -10px rgba(37,211,102,.75);
+    transition:transform .2s ease, box-shadow .2s ease;
+  }
+  .wa-fab:hover{transform:translateY(-2px);box-shadow:0 16px 34px -10px rgba(18,140,74,.95)}
+  .wa-fab svg{width:20px;height:20px;fill:currentColor;flex:none}
+  @media (max-width:880px){
+    .wa-fab{width:52px;height:52px;padding:0;justify-content:center;border-radius:50%;left:14px;bottom:14px}
+    .wa-fab span{display:none}
+  }
 
   /* ---------- start a project ---------- */
   .start-grid{display:grid;grid-template-columns:.92fr 1.08fr;gap:20px;align-items:start}
@@ -1076,6 +1094,12 @@
   </div>
 </footer>
 
+  <!-- WHATSAPP FLOAT: always one tap away -->
+  <a class="wa-fab" id="waFab" href="#" target="_blank" rel="noopener noreferrer" aria-label="Chat with Ghostsignal on WhatsApp">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17.5 14.4c-.3-.2-1.8-.9-2.1-1-.3-.1-.5-.2-.7.1-.2.3-.7 1-.9 1.2-.2.2-.4.2-.7.1-.3-.2-1.2-.5-2.3-1.4-.8-.8-1.4-1.7-1.6-2-.2-.3 0-.5.1-.6.2-.2.5-.5.6-.6.2-.2.2-.3.3-.5.1-.2 0-.4 0-.5-.1-.2-.7-1.6-.9-2.1-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.4-.2.3-.9 1-.9 2.3 0 1.3.9 2.6 1.1 2.8.1.2 1.9 2.9 4.6 4 2.3.9 2.7.8 3.2.7.5-.1 1.7-.7 1.9-1.4.2-.7.2-1.2.2-1.4-.1-.1-.3-.2-.6-.3z"/><path d="M12 2.2A9.8 9.8 0 0 0 3.6 17l-1.2 4.3 4.4-1.2A9.8 9.8 0 1 0 12 2.2zm0 17.8c-1.5 0-3-.4-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8 8 0 1 1 12 20z"/></svg>
+    <span>Chat on WhatsApp</span>
+  </a>
+
 <!-- EDIT MODE (only you use this) -->
 <div class="editbar">
   <div class="edit-tools">
@@ -1145,7 +1169,12 @@
     var base = window.SITE || {};
     var C = base.contact || {};
     var PHONE = (C.phone || '').trim();
-    var WA = (C.whatsapp || '').replace(/[^\d]/g, '');
+    var WA = (function () {
+      var d = String(C.whatsapp || '').replace(/[^\d]/g, '');
+      if (!d) return '';
+      if (d.charAt(0) === '0') d = String(C.whatsappCountry || '254').replace(/[^\d]/g, '') + d.slice(1);
+      return d;
+    })();
     var EMAIL = (C.email || '').trim();
 
     var overrides = {};
@@ -1204,9 +1233,8 @@
       var rows = '';
       if (WA) rows += '<a href="https://wa.me/' + WA + '?text=' + encodeURIComponent('Hi Ghostsignal, I found you online and I want to talk about a project.') + '" target="_blank" rel="noopener noreferrer">' +
         '<svg viewBox="0 0 24 24"><path d="M21 11.5a8.5 8.5 0 0 1-12.6 7.4L3 20.5l1.7-5.3A8.5 8.5 0 1 1 21 11.5z"/></svg>Message on WhatsApp</a>';
-      if (EMAIL) rows += '<a href="mailto:' + esc(EMAIL) + '?subject=' + encodeURIComponent('Project enquiry') + '">' +
-        '<svg viewBox="0 0 24 24"><rect x="2.5" y="5" width="19" height="14" rx="2.4"/><path d="m3 7 9 6 9-6"/></svg>' + esc(EMAIL) + '</a>' +
-        '<button type="button" class="copyline" data-copyemail="' + esc(EMAIL) + '">Copy email address</button>';
+      if (EMAIL) rows += '<button type="button" class="altbtn" data-copyemail="' + esc(EMAIL) + '" title="Tap to copy">' +
+        '<svg viewBox="0 0 24 24"><rect x="2.5" y="5" width="19" height="14" rx="2.4"/><path d="m3 7 9 6 9-6"/></svg>' + esc(EMAIL) + '</button>';
       alt.innerHTML = rows;
     }
 
@@ -1565,6 +1593,14 @@
       });
     }
 
+    function wireFab() {
+      var fab = document.getElementById('waFab');
+      if (!fab) return;
+      if (!WA) { fab.remove(); return; }
+      fab.setAttribute('href', 'https://wa.me/' + WA + '?text=' +
+        encodeURIComponent('Hi Ghostsignal, I found your site and I want to talk about a project.'));
+    }
+
     /* ---------- boot ---------- */
     // reveal safety net: some in-app webviews never fire IntersectionObserver
     (function () {
@@ -1589,6 +1625,7 @@
     renderTimes();
     renderSend();
     wireBrief();
+    wireFab();
     updateBrief();
     renderShop();
     renderJobs();

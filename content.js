@@ -21,8 +21,9 @@ window.SITE = {
      email    : leave "" to hide email buttons                */
   contact: {
     phone: "0712088589",
-    whatsapp: "254712088589",
-    email: "ghostsignal.inc@gmail.com",
+    whatsapp: "0712088589",       // your WhatsApp number, any format (0712... or +254712...)
+    email: "Ghostsignal.inc@gmail.com",
+    whatsappCountry: "254",     // added automatically when your WhatsApp number starts with 0
     hours: "Message or email anytime — same-day reply while we're mid-build.",
     title: "Tell us what you want built.",
     lead: "An app, a site, a game, a bot — or a bug that's been annoying you for months. One message is usually enough to know if we're a fit, and to give you a rough number."
